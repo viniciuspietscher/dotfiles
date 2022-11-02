@@ -20,6 +20,8 @@ font pango:monospace 10
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
+exec --no-startup-id xrandr --output DisplayPort-0 --primary --mode 3840x2160 --pos 0x0 --rotate normal --output DisplayPort-1 --off --output DisplayPort-2 --mode 3840x2160 --pos 3840x0 --rotate left --output HDMI-A-0 --off
+
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
@@ -34,6 +36,12 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
+
+# Flameshot - screenshot tool
+exec --no-startup-id flameshot
+
+# Pasystray - pulse audio applet
+exec --no-startup-id pasystray
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -114,17 +122,21 @@ bindsym $mod+a focus parent
 ############################################################
 
 # Remove all borders
-default_border none
+default_border pixel 1
 # start lockscreen
-bindsym $mod+x exec i3lock
+bindsym $mod+x exec i3lock -c 000000
 # gaps
-gaps inner 2
-gaps outer 4
+gaps inner 0
+gaps outer 0
 # set wallpaper
-exec_always feh --bg-center /home/vinicius/Pictures/wallpapers/WPW_Brazil_2021_5.png
+# exec_always feh --bg-fill /home/vinicius/Pictures/wallpapers/WPW_2021_Turkey_1.png
+# exec_always feh --bg-fill /home/vinicius/Pictures/wallpapers/macos-monterey-3840x2160_897687-mm-90.jpg
+exec_always feh --bg-fill /home/vinicius/Pictures/wallpapers/pJadQetzTkI-unsplash.jpg
 # open new terminal
 bindsym $mod+apostrophe split h ; exec $term
 bindsym $mod+slash split v ; exec $term
+
+for_window [all] border pixel 1
 
 ############################################################
 ############################################################
@@ -181,16 +193,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 5 px or 5 ppt
-        bindsym k resize grow height 5 px or 5 ppt
-        bindsym l resize shrink height 5 px or 5 ppt
-        bindsym semicolon resize grow width 5 px or 5 ppt
+        bindsym j resize shrink width 2 px or 2 ppt
+        bindsym k resize grow height 2 px or 2 ppt
+        bindsym l resize shrink height 2 px or 2 ppt
+        bindsym semicolon resize grow width 2 px or 2 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 5 px or 5 ppt
-        bindsym Down resize grow height 5 px or 5 ppt
-        bindsym Up resize shrink height 5 px or 5 ppt
-        bindsym Right resize grow width 5 px or 5 ppt
+        bindsym Left resize shrink width 2 px or 2 ppt
+        bindsym Down resize grow height 2 px or 2 ppt
+        bindsym Up resize shrink height 2 px or 2 ppt
+        bindsym Right resize grow width 2 px or 2 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -203,6 +215,14 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+        output primary
+        tray_output primary
         status_command i3status -c /home/vinicius/.config/i3status/i3status.conf
         position       top
+}
+
+bar {
+  position top
+  tray_output none
+  output DisplayPort-2
 }
